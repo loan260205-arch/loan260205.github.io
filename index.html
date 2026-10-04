@@ -9,66 +9,62 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   
   <style>
+    /* DESIGN TOKENS (Ant Design Rules & Anti-Slop) */
     :root {
-      --primary-green: #7bc4b2;
-      --text-dark: #222222;
-      --card-bg: rgba(255, 255, 255, 0.98);
+      --ant-primary: #7bc4b2;
+      --ant-bg: #f4f3ef;
+      --ant-card-bg: #ffffff;
+      --ant-text: #222222;
+      --ant-border: #d9d9d9;
+      --ant-radius: 6px; /* Khóa chính xác 6px */
+      --ant-space-unit: 8px; /* System spacing 8px base */
     }
 
-    /* Anti Ctrl+C / Khóa bôi đen */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-user-select: none;
       -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+      user-select: none; /* Anti Ctrl+C / Anti-copy */
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
-      color: var(--text-dark);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Montserrat', Roboto, sans-serif;
+      background-color: var(--ant-bg);
+      color: var(--ant-text);
       overflow: hidden;
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
     }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Fixed Navigation Top Header */
+    /* Fixed Navigation Top Header (Ant Design Menu Style) */
     nav.top-nav {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      background-color: rgba(255, 255, 255, 0.92);
+      background-color: #ffffff;
+      border-bottom: 1px solid var(--ant-border);
       display: flex;
       justify-content: center;
-      gap: 20px;
-      padding: 12px 0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      gap: calc(var(--ant-space-unit) * 3);
+      padding: calc(var(--ant-space-unit) * 1.5) 0;
       z-index: 1000;
-      backdrop-filter: blur(8px);
     }
     nav.top-nav a {
       text-decoration: none;
-      color: var(--text-dark);
-      font-weight: 700;
+      color: var(--ant-text);
+      font-weight: 600;
       font-size: 0.9em;
       cursor: pointer;
-      transition: color 0.3s;
+      transition: color 0.2s ease;
     }
-    nav.top-nav a:hover { color: var(--primary-green); }
+    nav.top-nav a:hover, nav.top-nav a.active-link {
+      color: var(--ant-primary);
+    }
 
-    /* VÙNG CLICK CHUYỂN SLIDE TRÁI / PHẢI */
+    /* CLICK ZONES (Left / Right Slide Control) */
     .click-zone {
       position: fixed;
       top: 50px;
@@ -80,12 +76,12 @@
     #zone-left { left: 0; }
     #zone-right { right: 0; }
 
-    /* SLIDER CONTAINER */
+    /* SLIDER CONTAINER WITH MORPH EFFECT */
     .slider-wrapper {
       display: flex;
       width: 1000vw;
       height: 100vh;
-      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: transform 0.5s cubic-bezier(0.645, 0.045, 0.355, 1); /* Ant Design Easing */
     }
 
     .slide {
@@ -94,41 +90,60 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 65px 20px 20px 20px;
+      padding: 60px 20px 20px 20px;
     }
 
-    /* CARD CONTENT - Chuẩn kích thước Canva */
+    /* CARD STRUCTURE (Flat, 6px radius, No Shadow Slop) */
     .card-content {
-      background: var(--card-bg);
-      width: 90%;
-      max-width: 980px;
-      border-radius: 12px;
-      padding: 30px 40px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      background: var(--ant-card-bg);
+      width: 100%;
+      max-width: 960px;
+      border: 1px solid var(--ant-border);
+      border-radius: var(--ant-radius);
+      padding: calc(var(--ant-space-unit) * 4);
       position: relative;
-      z-index: 600; /* Trổi lên trên vùng click zone để dễ tương tác */
+      z-index: 600;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      min-height: 520px;
     }
 
-    /* ANIMATION FADE IN UP */
-    .slide .anim {
+    /* MORPH TRANSITION FOR CONTENT */
+    .slide .morph-target {
       opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease;
+      transform: scale(0.98);
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
-    .slide.active-slide .anim {
+    .slide.active-slide .morph-target {
       opacity: 1;
-      transform: translateY(0);
+      transform: scale(1);
     }
-    .slide.active-slide .anim-d1 { transition-delay: 0.15s; }
-    .slide.active-slide .anim-d2 { transition-delay: 0.3s; }
-    .slide.active-slide .anim-d3 { transition-delay: 0.45s; }
 
-    /* Cover Page */
-    .cover-card { text-align: center; justify-content: center; background: #f7f6f2; padding: 60px 40px; }
-    .cover-subtitle { font-size: 1.1em; letter-spacing: 2px; color: #666; }
+    /* TYPEWRITER ANIMATION EFFECT FOR TEXT */
+    .slide .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid transparent;
+      width: 0;
+      opacity: 0;
+    }
+    .slide.active-slide .typewriter {
+      opacity: 1;
+      animation: typing 1.5s steps(40, end) forwards;
+    }
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    /* SLIDE 1 & 10 PULSE GLOW EFFECT */
+    .cover-card {
+      text-align: center;
+      justify-content: center;
+      background: #f7f6f2;
+    }
+    .cover-subtitle { font-size: 1.1em; letter-spacing: 2px; color: #666; margin-bottom: 10px; }
     .cover-script {
       font-family: 'Caveat', cursive;
       font-size: 5rem;
@@ -141,80 +156,88 @@
     .cover-main-title {
       font-size: 5.2rem;
       font-weight: 900;
-      color: var(--primary-green);
+      color: var(--ant-primary);
       letter-spacing: 4px;
+      animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; filter: brightness(1); }
+      50% { opacity: 0.82; filter: brightness(1.15); }
     }
 
-    /* Layout Elements */
+    /* SECTION HEADER */
     .section-header {
       display: flex;
       align-items: baseline;
-      gap: 15px;
-      border-bottom: 2px solid #222;
-      padding-bottom: 6px;
-      margin-bottom: 18px;
+      gap: calc(var(--ant-space-unit) * 2);
+      border-bottom: 2px solid var(--ant-text);
+      padding-bottom: var(--ant-space-unit);
+      margin-bottom: calc(var(--ant-space-unit) * 2.5);
     }
     .section-num { font-size: 2.3em; font-weight: 800; }
+
+    /* BADGE (Flat 6px Radius) */
     .green-badge {
-      background-color: var(--primary-green);
+      background-color: var(--ant-primary);
       color: #fff;
-      padding: 6px 14px;
+      padding: calc(var(--ant-space-unit) * 0.75) calc(var(--ant-space-unit) * 2);
       display: inline-block;
       font-weight: 700;
-      border-radius: 4px;
-      margin-bottom: 15px;
+      border-radius: var(--ant-radius);
+      margin-bottom: calc(var(--ant-space-unit) * 2);
+      align-self: flex-start;
     }
 
-    /* LAYOUT GRID: ALIGN TOP (FIX LỖI Ô XANH BỊ THỪA CAO) */
+    /* GRID LAYOUT - SỬA TRIỆT ĐỂ LỖI THỪA Ô XANH */
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 25px;
-      align-items: start; /* Sửa lỗi: Căn trên cùng, ô xanh chỉ ôm vừa đủ chữ */
+      gap: calc(var(--ant-space-unit) * 3);
+      align-items: start; /* Khóa ôm vừa khít trên cùng */
     }
 
-    /* FIX LỖI 2: Ô XANH ÔM VỪA KHÍT CHỮ NHƯ CANVA GỐC */
+    /* KHUNG MÀU XANH: ÔM VỪA ĐỦ NỘI DUNG CHỮ NGUYÊN BẢN CANVA */
     .green-box {
-      background-color: var(--primary-green);
+      background-color: var(--ant-primary);
       color: #111;
-      padding: 20px 22px;
-      border-radius: 8px;
-      height: auto !important; /* Không bắt dãn chiều cao */
-      box-sizing: border-box;
+      padding: calc(var(--ant-space-unit) * 2.5);
+      border-radius: var(--ant-radius);
+      height: fit-content !important; /* Không bao giờ thừa khung xanh */
+      align-self: start;
     }
-    .green-box li { margin-bottom: 8px; font-size: 0.95em; }
+    .green-box li { margin-bottom: var(--ant-space-unit); font-size: 0.95em; }
 
     img {
       width: 100%;
       height: auto;
-      border-radius: 6px;
-      border: 1px solid #ddd;
+      border-radius: var(--ant-radius);
+      border: 1px solid var(--ant-border);
       background: #fff;
       padding: 3px;
     }
 
-    /* Bottom Tabs Footer */
+    /* BOTTOM TABS FOOTER (Ant Design Tab Style) */
     .bottom-tabs {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      border-top: 2px dashed #ccc;
-      padding-top: 10px;
-      margin-top: 20px;
+      border-top: 1px dashed var(--ant-border);
+      padding-top: calc(var(--ant-space-unit) * 1.5);
+      margin-top: calc(var(--ant-space-unit) * 2.5);
       text-align: center;
     }
     .bottom-tab {
-      padding: 6px;
+      padding: var(--ant-space-unit);
       font-weight: 600;
       color: #666;
       font-size: 0.85em;
+      border-radius: var(--ant-radius);
     }
     .bottom-tab.active {
-      background-color: var(--primary-green);
+      background-color: var(--ant-primary);
       color: #000;
-      border-radius: 4px;
     }
 
-    /* Indicator Dots */
+    /* ANT DESIGN DOTS INDICATOR */
     .dots-container {
       position: fixed;
       bottom: 12px;
@@ -225,23 +248,27 @@
       z-index: 1000;
     }
     .dot {
-      width: 10px;
-      height: 10px;
-      background: rgba(255, 255, 255, 0.5);
+      width: 8px;
+      height: 8px;
+      background: #ccc;
       border-radius: 50%;
       cursor: pointer;
       transition: all 0.3s;
     }
-    .dot.active-dot { background: var(--primary-green); transform: scale(1.3); }
+    .dot.active-dot {
+      background: var(--ant-primary);
+      width: 20px;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body oncontextmenu="return false;">
 
-  <!-- VÙNG CLICK CHUYỂN SLIDE (Nửa Trái / Nửa Phải) -->
+  <!-- CLICK ZONES CONTROL (Bấm Nửa Trái / Nửa Phải) -->
   <div class="click-zone" id="zone-left" onclick="prevSlide()" title="Bấm để Lùi slide"></div>
   <div class="click-zone" id="zone-right" onclick="nextSlide()" title="Bấm để Tiến slide"></div>
 
-  <!-- Header Menu Navigation -->
+  <!-- Header Navigation -->
   <nav class="top-nav">
     <a onclick="goToSlide(0)">Trang chủ</a>
     <a onclick="goToSlide(2)">1. Về bản thân</a>
@@ -255,20 +282,20 @@
 
     <!-- SLIDE 1: COVER -->
     <div class="slide active-slide">
-      <div class="card-content cover-card">
-        <div class="cover-subtitle anim anim-d1">Portfolio Presentation</div>
-        <div class="cover-script anim anim-d2">Creative</div>
-        <div class="cover-main-title anim anim-d3">PORTFOLIO</div>
-        <div style="font-size: 1.4em; font-weight: 600; margin-top: 20px;" class="anim anim-d3">Phạm Hồng Loan</div>
+      <div class="card-content cover-card morph-target">
+        <div class="cover-subtitle">Portfolio Presentation</div>
+        <div class="cover-script">Creative</div>
+        <div class="cover-main-title">PORTFOLIO</div>
+        <div style="font-size: 1.4em; font-weight: 600; margin-top: 20px;">Phạm Hồng Loan</div>
       </div>
     </div>
 
     <!-- SLIDE 2: MỤC LỤC -->
     <div class="slide">
-      <div class="card-content">
+      <div class="card-content morph-target">
         <div class="grid-2col" style="align-items: center; padding: 30px 0;">
-          <div style="font-size: 2.3em; font-weight: 800; text-align: center;" class="anim anim-d1">MỤC LỤC</div>
-          <div style="background: var(--primary-green); padding: 30px; border-radius: 8px; font-weight: 700; font-size: 1.15em; display: flex; flex-direction: column; gap: 18px;" class="anim anim-d2">
+          <div style="font-size: 2.3em; font-weight: 800; text-align: center;">MỤC LỤC</div>
+          <div style="background: var(--ant-primary); padding: 30px; border-radius: var(--ant-radius); font-weight: 700; font-size: 1.15em; display: flex; flex-direction: column; gap: 18px;">
             <div>1. VỀ BẢN THÂN</div>
             <div>2. HỌC VẤN</div>
             <div>3. KINH NGHIỆM</div>
@@ -280,18 +307,21 @@
 
     <!-- SLIDE 3: VỀ BẢN THÂN -->
     <div class="slide">
-      <div class="card-content">
-        <div class="section-header anim anim-d1">
+      <div class="card-content morph-target">
+        <div class="section-header">
           <div class="section-num">1</div>
-          <div><h2>Về bản thân</h2><p>Xin chào, sau đây là một vài nét về bản thân mình.</p></div>
+          <div>
+            <h2>Về bản thân</h2>
+            <div class="typewriter"><p>Xin chào, sau đây là một vài nét về bản thân mình.</p></div>
+          </div>
         </div>
         <div class="grid-2col">
-          <div class="green-box anim anim-d2">
+          <div class="green-box">
             <h3 style="margin-bottom: 10px;">MÌNH LÀ HỒNG LOAN</h3>
             <p style="margin-bottom: 10px;">Hiện tại, mình đang là sinh viên năm 4 ngành Kinh tế đối ngoại.</p>
             <p>Dù không xuất phát từ chuyên ngành Marketing, mình yêu thích lĩnh vực này bởi tính sáng tạo, năng động và khả năng thấu hiểu nhu cầu, hành vi con người.</p>
           </div>
-          <div class="anim anim-d3"><img src="0.png" alt="Hồng Loan"></div>
+          <div><img src="0.png" alt="Hồng Loan"></div>
         </div>
         <div class="bottom-tabs">
           <div class="bottom-tab active">Về bản thân</div><div class="bottom-tab">Học vấn</div><div class="bottom-tab">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
@@ -301,20 +331,23 @@
 
     <!-- SLIDE 4: HỌC VẤN -->
     <div class="slide">
-      <div class="card-content">
-        <div class="section-header anim anim-d1">
+      <div class="card-content morph-target">
+        <div class="section-header">
           <div class="section-num">2</div>
-          <div><h2>Học vấn</h2><p>Đang theo học chương trình đại học</p></div>
+          <div>
+            <h2>Học vấn</h2>
+            <div class="typewriter"><p>Đang theo học chương trình đại học</p></div>
+          </div>
         </div>
         <div class="grid-2col">
-          <div class="anim anim-d2">
+          <div>
             <div class="green-badge" style="width:100%; text-align:center;">2023 - Nay: Đại học | Khối ngành: Kinh tế</div>
             <ul style="padding-left: 20px; margin-top: 15px;">
               <li style="margin-bottom: 8px;"><strong>Trường Đại học Ngoại thương</strong></li>
               <li><strong>Chuyên ngành:</strong> Kinh tế đối ngoại</li>
             </ul>
           </div>
-          <div class="anim anim-d3"><img src="1.png" alt="FTU"></div>
+          <div><img src="1.png" alt="FTU"></div>
         </div>
         <div class="bottom-tabs">
           <div class="bottom-tab">Về bản thân</div><div class="bottom-tab active">Học vấn</div><div class="bottom-tab">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
@@ -324,19 +357,23 @@
 
     <!-- SLIDE 5: CLB -->
     <div class="slide">
-      <div class="card-content">
-        <div class="section-header anim anim-d1">
-          <div class="section-num">3</div><div><h2>Kinh nghiệm</h2><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+      <div class="card-content morph-target">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <div>
+            <h2>Kinh nghiệm</h2>
+            <div class="typewriter"><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+          </div>
         </div>
-        <div class="green-badge anim anim-d2" style="align-self: flex-start;">Tham gia CLB trên trường</div>
+        <div class="green-badge">Tham gia CLB trên trường</div>
         <div class="grid-2col">
-          <div class="green-box anim anim-d2">
+          <div class="green-box">
             <ul>
               <li>Tham gia CLB từ những năm đầu đại học nhằm học hỏi và tích lũy trải nghiệm thực tế.</li>
               <li>Đảm nhiệm vai trò Ban Đối ngoại, bước đầu làm quen với các kỹ năng nền tảng của Marketing.</li>
             </ul>
           </div>
-          <div style="display:flex; gap:10px;" class="anim anim-d3">
+          <div style="display:flex; gap:10px;">
             <img src="3.png" style="width:62%;"><img src="2.png" style="width:38%;">
           </div>
         </div>
@@ -348,20 +385,24 @@
 
     <!-- SLIDE 6: INTERCHAIN -->
     <div class="slide">
-      <div class="card-content">
-        <div class="section-header anim anim-d1">
-          <div class="section-num">3</div><div><h2>Kinh nghiệm</h2><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+      <div class="card-content morph-target">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <div>
+            <h2>Kinh nghiệm</h2>
+            <div class="typewriter"><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+          </div>
         </div>
-        <div class="green-badge anim anim-d2" style="align-self: flex-start;">BTC Cuộc thi INTERCHAIN và Viet Nam Young Logistics Talents</div>
+        <div class="green-badge">BTC Cuộc thi INTERCHAIN và Viet Nam Young Logistics Talents</div>
         <div class="grid-2col">
-          <div class="green-box anim anim-d2">
+          <div class="green-box">
             <ul>
               <li>Vai trò Ban Tổ chức hai cuộc thi, làm email marketing cho hoạt động truyền thông và tiếp cận nhà tài trợ.</li>
               <li>Phối hợp chăm sóc đối tác và hỗ trợ tổ chức, điều phối sự kiện.</li>
               <li>Hiểu quy trình truyền thông sự kiện và rèn luyện kỹ năng làm việc nhóm.</li>
             </ul>
           </div>
-          <div class="anim anim-d3"><img src="4.png"></div>
+          <div><img src="4.png"></div>
         </div>
         <div class="bottom-tabs">
           <div class="bottom-tab">Về bản thân</div><div class="bottom-tab">Học vấn</div><div class="bottom-tab active">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
@@ -371,19 +412,23 @@
 
     <!-- SLIDE 7: BOOKMARK -->
     <div class="slide">
-      <div class="card-content">
-        <div class="section-header anim anim-d1">
-          <div class="section-num">3</div><div><h2>Kinh nghiệm</h2><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+      <div class="card-content morph-target">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <div>
+            <h2>Kinh nghiệm</h2>
+            <div class="typewriter"><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+          </div>
         </div>
-        <div class="green-badge anim anim-d2" style="align-self: flex-start;">Thiết kế ấn phẩm cho sự kiện</div>
+        <div class="green-badge">Thiết kế ấn phẩm cho sự kiện</div>
         <div class="grid-2col">
-          <div class="green-box anim anim-d2">
+          <div class="green-box">
             <ul>
               <li>Thiết kế bookmark cho workshop offline mừng Quốc khánh bằng Canva.</li>
               <li>Sản phẩm nhận phản hồi tích cực, có khách mong muốn mua trọn bộ dù được phát miễn phí.</li>
             </ul>
           </div>
-          <div class="anim anim-d3"><img src="5.png"></div>
+          <div><img src="5.png"></div>
         </div>
         <div class="bottom-tabs">
           <div class="bottom-tab">Về bản thân</div><div class="bottom-tab">Học vấn</div><div class="bottom-tab active">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
@@ -393,19 +438,23 @@
 
     <!-- SLIDE 8: SEO BMIN -->
     <div class="slide">
-      <div class="card-content">
-        <div class="section-header anim anim-d1">
-          <div class="section-num">3</div><div><h2>Kinh nghiệm</h2><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+      <div class="card-content morph-target">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <div>
+            <h2>Kinh nghiệm</h2>
+            <div class="typewriter"><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+          </div>
         </div>
-        <div class="green-badge anim anim-d2" style="align-self: flex-start;">Intern Marketing SEO tại BMIN - Content SEO và tối ưu hóa</div>
+        <div class="green-badge">Intern Marketing SEO tại BMIN - Content SEO và tối ưu hóa</div>
         <div class="grid-2col">
-          <div class="green-box anim anim-d2">
+          <div class="green-box">
             <ul>
               <li>Viết và tối ưu nội dung chuẩn SEO cho website của các thương hiệu: T Space, Rèm Thanh Phượng,...</li>
               <li>Nghiên cứu từ khóa và xây dựng outline trước khi triển khai bài viết.</li>
             </ul>
           </div>
-          <div style="display:flex; flex-direction:column; gap:10px;" class="anim anim-d3">
+          <div style="display:flex; flex-direction:column; gap:10px;">
             <img src="6.png"><img src="7.png">
           </div>
         </div>
@@ -417,13 +466,17 @@
 
     <!-- SLIDE 9: LIÊN HỆ -->
     <div class="slide">
-      <div class="card-content">
-        <div class="section-header anim anim-d1">
-          <div class="section-num">4</div><div><h2>Thông tin liên hệ</h2><p>Rất mong có cơ hội được kết nối và học hỏi từ Quý Công ty!</p></div>
+      <div class="card-content morph-target">
+        <div class="section-header">
+          <div class="section-num">4</div>
+          <div>
+            <h2>Thông tin liên hệ</h2>
+            <div class="typewriter"><p>Rất mong có cơ hội được kết nối và học hỏi từ Quý Công ty!</p></div>
+          </div>
         </div>
         <div class="grid-2col" style="align-items: center; padding: 20px 0;">
-          <div class="anim anim-d2" style="text-align:center;"><img src="8.png" style="max-width:280px;"></div>
-          <div class="anim anim-d3" style="font-size:1.2em; display:flex; flex-direction:column; gap:20px;">
+          <div style="text-align:center;"><img src="8.png" style="max-width:280px;"></div>
+          <div style="font-size:1.2em; display:flex; flex-direction:column; gap:20px;">
             <div>📞 <strong>Điện thoại:</strong> 0326169868</div>
             <div>✉️ <strong>Email:</strong> loanhongpham6a1@gmail.com</div>
           </div>
@@ -436,16 +489,16 @@
 
     <!-- SLIDE 10: THANKS -->
     <div class="slide">
-      <div class="card-content cover-card">
-        <div class="cover-subtitle anim anim-d1">Portfolio Presentation</div>
-        <div class="cover-script anim anim-d2">Thanks for</div>
-        <div class="cover-main-title anim anim-d3">WATCHING</div>
+      <div class="card-content cover-card morph-target">
+        <div class="cover-subtitle">Portfolio Presentation</div>
+        <div class="cover-script">Thanks for</div>
+        <div class="cover-main-title">WATCHING</div>
       </div>
     </div>
 
   </div>
 
-  <!-- Indicator Dots -->
+  <!-- Dots Indicator -->
   <div class="dots-container" id="dotsContainer"></div>
 
   <script>
