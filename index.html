@@ -4,206 +4,572 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio | Phạm Hồng Loan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <style>
-    /* DESIGN TOKENS & ANTI-COPY */
+    /* DESIGN SYSTEM & TOKENS */
+    :root {
+      --primary: #7bc4b2;
+      --primary-dark: #5ba392;
+      --primary-light: #e8f5f2;
+      --bg-color: #f7f6f2;
+      --card-bg: #ffffff;
+      --text-main: #1f1f1f;
+      --text-muted: #666666;
+      --border-color: #e5e5e5;
+      --radius: 6px;
+      --container-width: 1200px;
+    }
+
+    /* ANTI-COPY & BASE RESET */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-user-select: none;
       -moz-user-select: none;
-      user-select: none; /* Khóa bôi đen / copy */
+      user-select: none;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
-      background-color: #111111; /* Nền tối tôn vinh Slide Canva */
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      overflow: hidden;
-      width: 100vw;
-      height: 100vh;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    /* CLICK ZONES (Nửa Trái Lùi / Nửa Phải Tiến) */
-    .click-zone {
+    /* NAVBAR HEADER TRÀN VIỀN CAO CẤP */
+    header.navbar {
       position: fixed;
       top: 0;
-      height: 100vh;
-      width: 50vw;
-      z-index: 500;
-      cursor: pointer;
+      left: 0;
+      width: 100%;
+      background: rgba(247, 246, 242, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+      padding: 16px 0;
     }
-    #zone-left { left: 0; }
-    #zone-right { right: 0; }
 
-    /* SLIDER CONTAINER */
-    .slider-wrapper {
+    .nav-container {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: 0 24px;
       display: flex;
-      width: 900vw; /* 9 Ảnh Slide Canva */
-      height: 100vh;
-      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .slide {
-      width: 100vw;
-      height: 100vh;
+    .logo {
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+      color: var(--text-main);
+    }
+    .logo span { color: var(--primary); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* SECTION LAYOUT TRÀN MÀN HÌNH */
+    section {
+      width: 100%;
+      padding: 100px 24px 80px 24px;
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 20px;
     }
 
-    /* KHUNG ẢNH CANVA CHUẨN ĐỒNG NHẤT 100% KÍCH THƯỚC */
-    .slide-img-container {
-      max-width: 95vw;
-      max-height: 90vh;
+    .section-inner {
+      width: 100%;
+      max-width: var(--container-width);
+    }
+
+    /* HERO COVER SECTION */
+    #hero {
+      min-height: 100vh;
       display: flex;
-      justify-content: center;
       align-items: center;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-      background: #fff;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      opacity: 0.85;
-      transform: scale(0.97);
+      justify-content: center;
+      text-align: center;
+      background: radial-gradient(circle at 50% 50%, #ffffff 0%, var(--bg-color) 70%);
+      padding-top: 120px;
     }
 
-    .slide.active-slide .slide-img-container {
-      opacity: 1;
-      transform: scale(1);
+    .hero-subtitle {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
-    .slide-img-container img {
-      width: auto;
-      height: auto;
-      max-width: 100%;
-      max-height: 90vh;
-      object-fit: contain;
-      display: block;
-      pointer-events: none; /* Khóa kéo thả ảnh */
+    .hero-script {
+      font-family: 'Caveat', cursive;
+      font-size: 6rem;
+      color: var(--text-main);
+      line-height: 0.7;
+      margin-bottom: -35px;
+      position: relative;
+      z-index: 2;
     }
 
-    /* HIỆU ỨNG NHẤP NHÁY NHỊP THỞ CHO SLIDE ĐẦU & CUỐI */
-    .slide:first-child.active-slide .slide-img-container,
-    .slide:last-child.active-slide .slide-img-container {
+    .hero-title {
+      font-size: 6.5rem;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: 6px;
+      line-height: 1;
+      text-transform: uppercase;
       animation: pulseGlow 3s infinite ease-in-out;
     }
 
     @keyframes pulseGlow {
       0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.08); }
+      50% { filter: brightness(1.12); }
     }
 
-    /* CHẤM TRÒN ĐIỀU HƯỚNG BÊN DƯỚI */
-    .dots-container {
-      position: fixed;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
+    .hero-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-top: 24px;
+      color: var(--text-main);
+    }
+
+    /* SECTION HEADER STYLE */
+    .section-header {
       display: flex;
-      gap: 10px;
-      z-index: 1000;
-      background: rgba(0,0,0,0.5);
-      padding: 8px 16px;
-      border-radius: 20px;
-      backdrop-filter: blur(5px);
+      align-items: baseline;
+      gap: 16px;
+      border-bottom: 2px solid var(--text-main);
+      padding-bottom: 12px;
+      margin-bottom: 40px;
     }
 
-    .dot {
-      width: 10px;
-      height: 10px;
-      background: rgba(255, 255, 255, 0.4);
-      border-radius: 50%;
-      cursor: pointer;
+    .section-num {
+      font-size: 3rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--text-main);
+    }
+
+    .section-title h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    .section-title p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* GRID & CARDS (SỬA DỨT ĐIỂM THỪA KHUNG XANH) */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start; /* ÔM VỪA KHÍT NỘI DUNG CHỮ */
+    }
+
+    .badge {
+      background-color: var(--primary);
+      color: #ffffff;
+      padding: 8px 18px;
+      display: inline-block;
+      font-weight: 700;
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    /* KHUNG XANH THÔNG TIN TỰ ĐỘNG CÂN ĐỐI */
+    .green-card {
+      background-color: var(--primary);
+      color: #111111;
+      padding: 32px;
+      border-radius: var(--radius);
+      height: fit-content; /* CHỈ ÔM SÁT CHỮ */
+    }
+
+    .green-card h3 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .green-card p, .green-card li {
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .green-card ul {
+      padding-left: 20px;
+    }
+
+    .green-card li {
+      margin-bottom: 12px;
+    }
+
+    .img-wrapper {
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      padding: 6px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .img-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: calc(var(--radius) - 2px);
+    }
+
+    /* TYPEWRITER ANIMATION EFFECT */
+    .typewriter-text {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--primary);
+      width: 0;
+      animation: typing 2.5s steps(40, end) forwards;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    /* SCROLL REVEAL ANIMATION */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MỤC LỤC CARDS GRID */
+    .contents-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .content-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 28px;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 16px;
       transition: all 0.3s ease;
     }
 
-    .dot.active-dot {
-      background: #7bc4b2;
-      width: 24px;
-      border-radius: 6px;
+    .content-box:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+    }
+
+    .content-box .num {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+    }
+
+    /* CONTACT SECTION */
+    .contact-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 40px;
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      font-size: 1.15rem;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 900px) {
+      .grid-2col { grid-template-columns: 1fr; }
+      .hero-title { font-size: 4rem; }
+      .hero-script { font-size: 4rem; }
+      .contents-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
     }
   </style>
 </head>
-<body oncontextmenu="return false;"> <!-- Khóa chuột phải -->
+<body oncontextmenu="return false;">
 
-  <!-- Vùng Click Chuyển Slide -->
-  <div class="click-zone" id="zone-left" onclick="prevSlide()" title="Click nửa trái để Lùi"></div>
-  <div class="click-zone" id="zone-right" onclick="nextSlide()" title="Click nửa phải để Tiến"></div>
+  <!-- NAVBAR FIXED TRÀN VIỀN -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo">PHẠM HỒNG LOAN <span>.</span></div>
+      <ul class="nav-links">
+        <li><a href="#about">01. Về bản thân</a></li>
+        <li><a href="#education">02. Học vấn</a></li>
+        <li><a href="#experience">03. Kinh nghiệm</a></li>
+        <li><a href="#contact">04. Liên hệ</a></li>
+      </ul>
+    </div>
+  </header>
 
-  <!-- Khung Slider Ảnh Canva -->
-  <div class="slider-wrapper" id="sliderWrapper">
-    <div class="slide active-slide"><div class="slide-img-container"><img src="0.png" alt="Slide 1"></div></div>
-    <div class="slide"><div class="slide-img-container"><img src="1.png" alt="Slide 2"></div></div>
-    <div class="slide"><div class="slide-img-container"><img src="2.png" alt="Slide 3"></div></div>
-    <div class="slide"><div class="slide-img-container"><img src="3.png" alt="Slide 4"></div></div>
-    <div class="slide"><div class="slide-img-container"><img src="4.png" alt="Slide 5"></div></div>
-    <div class="slide"><div class="slide-img-container"><img src="5.png" alt="Slide 6"></div></div>
-    <div class="slide"><div class="slide-img-container"><img src="6.png" alt="Slide 7"></div></div>
-    <div class="slide"><div class="slide-img-container"><img src="7.png" alt="Slide 8"></div></div>
-    <div class="slide"><div class="slide-img-container"><img src="8.png" alt="Slide 9"></div></div>
-  </div>
+  <!-- HERO / COVER SECTION -->
+  <section id="hero">
+    <div class="section-inner">
+      <div class="hero-subtitle">Portfolio Presentation</div>
+      <div class="hero-script">Creative</div>
+      <h1 class="hero-title">PORTFOLIO</h1>
+      <div class="hero-name">Phạm Hồng Loan</div>
+    </div>
+  </section>
 
-  <!-- Thanh Chấm Tròn Chuyển Slide -->
-  <div class="dots-container" id="dotsContainer"></div>
+  <!-- MỤC LỤC SECTION -->
+  <section id="contents">
+    <div class="section-inner reveal">
+      <div class="section-header">
+        <div class="section-num">00</div>
+        <div class="section-title">
+          <h2>Mục Lục</h2>
+          <p>Tổng quan cấu trúc hồ sơ năng lực</p>
+        </div>
+      </div>
+      <div class="contents-grid">
+        <div class="content-box"><div class="num">01</div> VỀ BẢN THÂN</div>
+        <div class="content-box"><div class="num">02</div> HỌC VẤN</div>
+        <div class="content-box"><div class="num">03</div> KINH NGHIỆM</div>
+        <div class="content-box"><div class="num">04</div> THÔNG TIN LIÊN HỆ</div>
+      </div>
+    </div>
+  </section>
 
+  <!-- 01. VỀ BẢN THÂN -->
+  <section id="about">
+    <div class="section-inner reveal">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <div class="section-title">
+          <h2>Về bản thân</h2>
+          <p class="typewriter-text">Xin chào, sau đây là một vài nét về bản thân mình.</p>
+        </div>
+      </div>
+      <div class="grid-2col">
+        <div class="green-card">
+          <h3>MÌNH LÀ HỒNG LOAN</h3>
+          <p style="margin-bottom: 12px;">Hiện tại, mình đang là sinh viên năm 4 ngành Kinh tế đối ngoại.</p>
+          <p>Dù không xuất phát từ chuyên ngành Marketing, mình yêu thích lĩnh vực này bởi tính sáng tạo, năng động và khả năng thấu hiểu nhu cầu, hành vi con người. Từ đó, mình chủ động học hỏi và trau dồi kiến thức nhằm đáp ứng tốt yêu cầu công việc.</p>
+        </div>
+        <div class="img-wrapper">
+          <img src="0.png" alt="Phạm Hồng Loan">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02. HỌC VẤN -->
+  <section id="education">
+    <div class="section-inner reveal">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <div class="section-title">
+          <h2>Học vấn</h2>
+          <p>Đang theo học chương trình đại học</p>
+        </div>
+      </div>
+      <div class="grid-2col">
+        <div>
+          <div class="badge" style="width: 100%; text-align: center;">2023 - Nay: Đại học | Khối ngành: Kinh tế</div>
+          <div class="green-card" style="background: #ffffff; border: 1px solid var(--border-color);">
+            <h3 style="color: var(--text-main);">Trường Đại học Ngoại thương</h3>
+            <p><strong>Chuyên ngành:</strong> Kinh tế đối ngoại</p>
+          </div>
+        </div>
+        <div class="img-wrapper">
+          <img src="1.png" alt="Đại học Ngoại Thương">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03. KINH NGHIỆM - CLB -->
+  <section id="experience">
+    <div class="section-inner reveal">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <div class="section-title">
+          <h2>Kinh nghiệm</h2>
+          <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+        </div>
+      </div>
+      
+      <!-- Dự án 1 -->
+      <div style="margin-bottom: 60px;">
+        <div class="badge">Tham gia CLB trên trường</div>
+        <div class="grid-2col">
+          <div class="green-card">
+            <ul>
+              <li>Tham gia CLB từ những năm đầu đại học nhằm học hỏi và tích lũy trải nghiệm thực tế.</li>
+              <li>Đảm nhiệm vai trò Ban Đối ngoại, bước đầu làm quen với các kỹ năng nền tảng của Marketing.</li>
+            </ul>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <div class="img-wrapper" style="width: 60%;"><img src="3.png" alt="CLB 1"></div>
+            <div class="img-wrapper" style="width: 40%;"><img src="2.png" alt="CLB 2"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dự án 2 -->
+      <div style="margin-bottom: 60px;" class="reveal">
+        <div class="badge">BTC Cuộc thi INTERCHAIN & Viet Nam Young Logistics Talents</div>
+        <div class="grid-2col">
+          <div class="green-card">
+            <ul>
+              <li>Vai trò Ban Tổ chức hai cuộc thi, làm email marketing cho hoạt động truyền thông và tiếp cận nhà tài trợ.</li>
+              <li>Phối hợp chăm sóc đối tác và hỗ trợ tổ chức, điều phối sự kiện.</li>
+              <li>Hiểu quy trình truyền thông sự kiện và rèn luyện kỹ năng làm việc nhóm.</li>
+            </ul>
+          </div>
+          <div class="img-wrapper"><img src="4.png" alt="Cuộc thi"></div>
+        </div>
+      </div>
+
+      <!-- Dự án 3 -->
+      <div style="margin-bottom: 60px;" class="reveal">
+        <div class="badge">Thiết kế ấn phẩm cho sự kiện</div>
+        <div class="grid-2col">
+          <div class="green-card">
+            <ul>
+              <li>Thiết kế bookmark cho workshop offline mừng Quốc khánh bằng Canva.</li>
+              <li>Sản phẩm nhận phản hồi tích cực, có khách mong muốn mua trọn bộ dù được phát miễn phí.</li>
+            </ul>
+          </div>
+          <div class="img-wrapper"><img src="5.png" alt="Thiết kế Bookmark"></div>
+        </div>
+      </div>
+
+      <!-- Dự án 4 -->
+      <div class="reveal">
+        <div class="badge">Intern Marketing SEO tại BMIN</div>
+        <div class="grid-2col">
+          <div class="green-card">
+            <ul>
+              <li>Viết và tối ưu nội dung chuẩn SEO cho website các thương hiệu: T Space, Rèm Thanh Phượng,...</li>
+              <li>Nghiên cứu từ khóa và xây dựng outline trước khi triển khai bài viết.</li>
+              <li>Chỉnh sửa hình ảnh bằng Canva để sử dụng trong các bài đăng trên website.</li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="img-wrapper"><img src="6.png" alt="SEO Project 1"></div>
+            <div class="img-wrapper"><img src="7.png" alt="SEO Project 2"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 04. THÔNG TIN LIÊN HỆ -->
+  <section id="contact">
+    <div class="section-inner reveal">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <div class="section-title">
+          <h2>Thông tin liên hệ</h2>
+          <p>Rất mong có cơ hội được kết nối và học hỏi từ Quý Công ty!</p>
+        </div>
+      </div>
+      <div class="grid-2col" style="align-items: center;">
+        <div class="img-wrapper" style="max-width: 360px; margin: 0 auto;">
+          <img src="8.png" alt="Phạm Hồng Loan Contact">
+        </div>
+        <div class="contact-card">
+          <div>📞 <strong>Điện thoại:</strong> 0326169868</div>
+          <div>✉️️ <strong>Email:</strong> loanhongpham6a1@gmail.com</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THANKS SECTION -->
+  <section style="min-height: 60vh; text-align: center; display: flex; align-items: center; background: #ffffff;">
+    <div class="section-inner reveal">
+      <div class="hero-subtitle">Portfolio Presentation</div>
+      <div class="hero-script">Thanks for</div>
+      <h2 class="hero-title" style="font-size: 5rem;">WATCHING</h2>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Phạm Hồng Loan. Designed & Developed for Portfolio Assessment.</p>
+  </footer>
+
+  <!-- SCRIPT CUỘC TRANG MƯỢT & HIỆU ỨNG REVEAL -->
   <script>
-    let currentSlide = 0;
-    const totalSlides = 9;
-    const sliderWrapper = document.getElementById('sliderWrapper');
-    const slides = document.querySelectorAll('.slide');
-    const dotsContainer = document.getElementById('dotsContainer');
-
-    // Tạo chấm tròn điều hướng
-    for (let i = 0; i < totalSlides; i++) {
-      const dot = document.createElement('div');
-      dot.classList.add('dot');
-      if (i === 0) dot.classList.add('active-dot');
-      dot.addEventListener('click', (e) => {
-        e.stopPropagation();
-        goToSlide(i);
-      });
-      dotsContainer.appendChild(dot);
-    }
-
-    function updateSlider() {
-      sliderWrapper.style.transform = `translateX(-${currentSlide * 100}vw)`;
-      slides.forEach((slide, index) => {
-        if (index === currentSlide) {
-          slide.classList.add('active-slide');
-        } else {
-          slide.classList.remove('active-slide');
+    // Hiệu ứng cuộn trang hiện từng phần (Scroll Reveal)
+    function revealOnScroll() {
+      const reveals = document.querySelectorAll('.reveal');
+      const windowHeight = window.innerHeight;
+      
+      reveals.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 120;
+        
+        if (elementTop < windowHeight - elementVisible) {
+          element.classList.add('active');
         }
       });
-      document.querySelectorAll('.dot').forEach((dot, index) => {
-        dot.classList.toggle('active-dot', index === currentSlide);
-      });
     }
 
-    function goToSlide(index) {
-      currentSlide = index;
-      updateSlider();
-    }
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll(); // Gọi chạy lần đầu khi tải trang
 
-    function nextSlide() {
-      if (currentSlide < totalSlides - 1) currentSlide++;
-      else currentSlide = 0;
-      updateSlider();
-    }
-
-    function prevSlide() {
-      if (currentSlide > 0) currentSlide--;
-      else currentSlide = totalSlides - 1;
-      updateSlider();
-    }
-
-    // Điều khiển bằng phím mũi tên bàn phím
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
-      if (e.key === 'ArrowLeft') prevSlide();
-    });
-
-    // Chống F12, Ctrl+C, Ctrl+U, Ctrl+S
+    // Chống copy bằng phím tắt Ctrl+C, Ctrl+U, F12, Click chuột phải
     document.onkeydown = function(e) {
       if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 67 || e.keyCode == 83))) {
         return false;
