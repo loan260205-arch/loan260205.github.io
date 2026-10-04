@@ -17,11 +17,18 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory; /* Tự động khóa cuộn chuẩn theo từng Slide */
+    }
+
     body {
       font-family: 'Montserrat', sans-serif;
       background-color: var(--light-bg);
       color: var(--text-dark);
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
     /* Fixed Navigation Top Header */
@@ -32,41 +39,49 @@
       background-color: rgba(255, 255, 255, 0.95);
       display: flex;
       justify-content: center;
-      gap: 20px;
-      padding: 12px 0;
+      gap: 25px;
+      padding: 15px 0;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
       z-index: 1000;
+      backdrop-filter: blur(5px);
     }
     nav.top-nav a {
       text-decoration: none;
       color: var(--text-dark);
       font-weight: 600;
-      font-size: 0.9em;
-      transition: color 0.3s;
+      font-size: 0.95em;
+      transition: all 0.3s ease;
+      position: relative;
     }
     nav.top-nav a:hover { color: var(--primary-green); }
 
-    /* Page Container Section */
+    /* Page Container Section - Đồng bộ kích thước chuẩn Slide */
     .page-section {
-      max-width: 1000px;
-      margin: 80px auto 40px auto;
+      max-width: 1050px;
+      min-height: 82vh; /* Fix lỗi 1 & 3: Giúp tất cả các trang luôn bằng kích thước nhau */
+      margin: 75px auto 35px auto;
       background: var(--card-bg);
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
       padding: 40px;
       position: relative;
+      scroll-snap-align: center; /* Hút chuẩn Slide vào giữa màn hình */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.4s ease, opacity 0.4s ease;
     }
 
     /* Cover Page 1 & 10 */
     .cover-page {
       text-align: center;
-      padding: 100px 20px;
+      justify-content: center;
       background-color: #f7f6f2;
     }
-    .cover-subtitle { font-size: 1em; letter-spacing: 1px; color: #666; margin-bottom: 10px; }
+    .cover-subtitle { font-size: 1.1em; letter-spacing: 2px; color: #666; margin-bottom: 10px; text-transform: uppercase; }
     .cover-script {
       font-family: 'Caveat', cursive;
-      font-size: 5rem;
+      font-size: 5.5rem;
       color: #222;
       line-height: 0.8;
       margin-bottom: -35px;
@@ -74,13 +89,13 @@
       z-index: 2;
     }
     .cover-main-title {
-      font-size: 5.5rem;
+      font-size: 5.8rem;
       font-weight: 900;
       color: var(--primary-green);
       letter-spacing: 4px;
       text-transform: uppercase;
     }
-    .cover-name { font-size: 1.5em; font-weight: 600; margin-top: 30px; }
+    .cover-name { font-size: 1.6em; font-weight: 600; margin-top: 30px; }
 
     /* Page Header Bar */
     .section-header {
@@ -89,7 +104,7 @@
       gap: 15px;
       border-bottom: 2px solid #222;
       padding-bottom: 10px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
     .section-num { font-size: 2.8em; font-weight: 800; line-height: 1; }
     .section-title-group h2 { font-size: 1.6em; text-transform: capitalize; }
@@ -102,32 +117,39 @@
       padding: 8px 16px;
       display: inline-block;
       font-weight: 700;
-      font-size: 1.1em;
+      font-size: 1.05em;
       border-radius: 4px;
       margin-bottom: 15px;
     }
+    
+    /* Fix lỗi 2: Tối ưu khối xanh không bị trống thừa */
     .green-box {
       background-color: var(--primary-green);
       color: #111;
-      padding: 25px;
-      border-radius: 6px;
+      padding: 25px 30px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       height: 100%;
+      box-sizing: border-box;
     }
     .green-box ul { list-style-position: inside; }
-    .green-box li { margin-bottom: 12px; }
+    .green-box li { margin-bottom: 12px; font-size: 0.98em; }
 
-    /* Grid Layouts */
+    /* Grid Layouts - Căn chỉnh độ cao đồng đều */
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 30px;
-      align-items: center;
+      align-items: stretch; /* Fix lỗi 2: Kéo hai bên bằng nhau */
+      flex-grow: 1;
     }
 
     /* Images */
     img {
       width: 100%;
-      height: auto;
+      height: 100%;
       border-radius: 6px;
       object-fit: cover;
     }
@@ -136,28 +158,30 @@
       padding: 5px;
       background: #fff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 6px;
     }
 
     /* Footer Bottom Tab Bar */
     .bottom-tabs {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      margin-top: 40px;
+      margin-top: 25px;
       border-top: 2px dashed #ccc;
       padding-top: 15px;
       text-align: center;
     }
     .bottom-tab {
-      padding: 10px;
+      padding: 8px;
       font-weight: 600;
       color: #555;
-      font-size: 0.9em;
+      font-size: 0.88em;
       text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s ease;
     }
     .bottom-tab.active {
       background-color: var(--primary-green);
       color: #000;
-      border-radius: 4px;
     }
 
     /* Responsive */
@@ -165,7 +189,8 @@
       .grid-2col { grid-template-columns: 1fr; }
       .cover-main-title { font-size: 3rem; }
       .cover-script { font-size: 3.5rem; }
-      .bottom-tabs { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .bottom-tabs { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .page-section { min-height: auto; margin: 60px 15px 20px 15px; padding: 20px; }
     }
   </style>
 </head>
@@ -173,6 +198,7 @@
 
   <!-- Navigation Bar Top -->
   <nav class="top-nav">
+    <a href="#cover">Trang chủ</a>
     <a href="#about">1. Về bản thân</a>
     <a href="#education">2. Học vấn</a>
     <a href="#experience">3. Kinh nghiệm</a>
@@ -180,7 +206,7 @@
   </nav>
 
   <!-- PAGE 1: COVER -->
-  <div class="page-section cover-page">
+  <div class="page-section cover-page" id="cover">
     <div class="cover-subtitle">Portfolio Presentation</div>
     <div class="cover-script">Creative</div>
     <div class="cover-main-title">PORTFOLIO</div>
@@ -188,11 +214,11 @@
   </div>
 
   <!-- PAGE 2: MỤC LỤC -->
-  <div class="page-section grid-2col" style="padding: 60px 40px;">
-    <div style="font-size: 2.2em; font-weight: 700; text-align: center; letter-spacing: 2px;">
+  <div class="page-section grid-2col" style="align-items: center;" id="contents">
+    <div style="font-size: 2.5em; font-weight: 800; text-align: center; letter-spacing: 3px;">
       MỤC LỤC
     </div>
-    <div style="background-color: var(--primary-green); padding: 40px; border-radius: 6px; font-weight: 700; font-size: 1.2em; display: flex; flex-direction: column; gap: 20px;">
+    <div style="background-color: var(--primary-green); padding: 40px; border-radius: 8px; font-weight: 700; font-size: 1.25em; display: flex; flex-direction: column; gap: 25px; justify-content: center; height: 80%;">
       <div>1. VỀ BẢN THÂN</div>
       <div>2. HỌC VẤN</div>
       <div>3. KINH NGHIỆM</div>
@@ -212,7 +238,7 @@
 
     <div class="grid-2col">
       <div class="green-box">
-        <h3 style="margin-bottom: 15px; font-size: 1.3em;">MÌNH LÀ HỒNG LOAN</h3>
+        <h3 style="margin-bottom: 15px; font-size: 1.35em;">MÌNH LÀ HỒNG LOAN</h3>
         <p style="margin-bottom: 15px;">Hiện tại, mình đang là sinh viên năm 4 ngành Kinh tế đối ngoại.</p>
         <p>Dù không xuất phát từ chuyên ngành Marketing, mình yêu thích lĩnh vực này bởi tính sáng tạo, năng động và khả năng thấu hiểu nhu cầu, hành vi con người. Từ đó, mình chủ động học hỏi và trau dồi kiến thức nhằm đáp ứng tốt yêu cầu công việc và định hướng của Quý Công ty.</p>
       </div>
@@ -240,12 +266,12 @@
     </div>
 
     <div class="grid-2col">
-      <div>
-        <div class="green-badge" style="width: 100%;">
+      <div style="display: flex; flex-direction: column; justify-content: center;">
+        <div class="green-badge" style="width: 100%; text-align: center; padding: 15px 0;">
           2023 - Nay: Đại học<br>Khối ngành: Kinh tế
         </div>
-        <ul style="margin-top: 20px; padding-left: 20px;">
-          <li style="margin-bottom: 10px;"><strong>Trường Đại học Ngoại thương</strong></li>
+        <ul style="margin-top: 25px; padding-left: 20px; font-size: 1.05em;">
+          <li style="margin-bottom: 15px;"><strong>Trường Đại học Ngoại thương</strong></li>
           <li><strong>Chuyên ngành:</strong> Kinh tế đối ngoại</li>
         </ul>
       </div>
@@ -264,17 +290,18 @@
 
   <!-- PAGE 5: KINH NGHIỆM - CLB -->
   <div class="page-section" id="experience">
-    <div class="section-header">
-      <div class="section-num">3</div>
-      <div class="section-title-group">
-        <h2>Kinh nghiệm</h2>
-        <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+    <div>
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title-group">
+          <h2>Kinh nghiệm</h2>
+          <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+        </div>
       </div>
+      <div class="green-badge">Tham gia CLB trên trường</div>
     </div>
 
-    <div class="green-badge">Tham gia CLB trên trường</div>
-
-    <div class="grid-2col" style="margin-top: 15px;">
+    <div class="grid-2col">
       <div class="green-box">
         <ul>
           <li>Tham gia CLB từ những năm đầu đại học nhằm học hỏi và tích lũy trải nghiệm thực tế.</li>
@@ -297,19 +324,20 @@
 
   <!-- PAGE 6: KINH NGHIỆM - BAN TỔ CHỨC CUỘC THI -->
   <div class="page-section">
-    <div class="section-header">
-      <div class="section-num">3</div>
-      <div class="section-title-group">
-        <h2>Kinh nghiệm</h2>
-        <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+    <div>
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title-group">
+          <h2>Kinh nghiệm</h2>
+          <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+        </div>
+      </div>
+      <div class="green-badge">
+        BTC Cuộc thi INTERCHAIN và Viet Nam Young Logistics Talents
       </div>
     </div>
 
-    <div class="green-badge">
-      BTC Cuộc thi INTERCHAIN và Viet Nam Young Logistics Talents
-    </div>
-
-    <div class="grid-2col" style="margin-top: 15px;">
+    <div class="grid-2col">
       <div class="green-box">
         <ul>
           <li>Vai trò Ban Tổ chức hai cuộc thi, làm email marketing cho hoạt động truyền thông và tiếp cận nhà tài trợ.</li>
@@ -332,17 +360,18 @@
 
   <!-- PAGE 7: THIẾT KẾ ẤN PHẨM -->
   <div class="page-section">
-    <div class="section-header">
-      <div class="section-num">3</div>
-      <div class="section-title-group">
-        <h2>Kinh nghiệm</h2>
-        <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+    <div>
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title-group">
+          <h2>Kinh nghiệm</h2>
+          <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+        </div>
       </div>
+      <div class="green-badge">Thiết kế ấn phẩm cho sự kiện</div>
     </div>
 
-    <div class="green-badge">Thiết kế ấn phẩm cho sự kiện</div>
-
-    <div class="grid-2col" style="margin-top: 15px;">
+    <div class="grid-2col">
       <div class="green-box">
         <ul>
           <li>Thiết kế bookmark cho workshop offline mừng Quốc khánh bằng Canva.</li>
@@ -364,19 +393,20 @@
 
   <!-- PAGE 8: INTERN MARKETING SEO -->
   <div class="page-section">
-    <div class="section-header">
-      <div class="section-num">3</div>
-      <div class="section-title-group">
-        <h2>Kinh nghiệm</h2>
-        <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+    <div>
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title-group">
+          <h2>Kinh nghiệm</h2>
+          <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+        </div>
+      </div>
+      <div class="green-badge">
+        Intern Marketing SEO tại BMIN - Content SEO và tối ưu hóa
       </div>
     </div>
 
-    <div class="green-badge">
-      Intern Marketing SEO tại BMIN - Content SEO và tối ưu hóa
-    </div>
-
-    <div class="grid-2col" style="margin-top: 15px;">
+    <div class="grid-2col">
       <div class="green-box">
         <ul>
           <li>Viết và tối ưu nội dung chuẩn SEO cho website của các thương hiệu: T Space, Rèm Thanh Phượng, Tàu cao tốc Hoàng Quân,...</li>
@@ -385,8 +415,8 @@
         </ul>
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <img src="6.png" alt="Dự án SEO BMIN" class="img-frame">
-        <img src="7.png" alt="TSpace Website" class="img-frame">
+        <img src="6.png" alt="Dự án SEO BMIN" class="img-frame" style="height: 50%;">
+        <img src="7.png" alt="TSpace Website" class="img-frame" style="height: 50%;">
       </div>
     </div>
 
@@ -408,11 +438,11 @@
       </div>
     </div>
 
-    <div class="grid-2col" style="align-items: center; padding: 20px 0;">
-      <div>
-        <img src="8.png" alt="Phạm Hồng Loan Contact" class="img-frame" style="max-width: 350px;">
+    <div class="grid-2col" style="align-items: center;">
+      <div style="text-align: center;">
+        <img src="8.png" alt="Phạm Hồng Loan Contact" class="img-frame" style="max-width: 320px; height: auto;">
       </div>
-      <div style="font-size: 1.2em; display: flex; flex-direction: column; gap: 20px;">
+      <div style="font-size: 1.25em; display: flex; flex-direction: column; gap: 25px; justify-content: center;">
         <div><strong>📞 Điện thoại:</strong> 0326169868</div>
         <div><strong>✉️ Email:</strong> loanhongpham6a1@gmail.com</div>
       </div>
