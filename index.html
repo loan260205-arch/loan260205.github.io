@@ -6,462 +6,531 @@
   <title>Portfolio | Phạm Hồng Loan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
       --primary-green: #7bc4b2;
-      --light-bg: #f4f3ef;
       --text-dark: #222222;
-      --card-bg: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.95);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    html {
-      scroll-behavior: smooth;
-      scroll-snap-type: y mandatory; /* Tự động khóa cuộn chuẩn theo từng Slide */
+    /* 1. CHỐNG BÔI ĐEN COPY (Anti Ctrl+C, Ctrl+V) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none; /* Khóa bôi đen chữ */
     }
 
     body {
       font-family: 'Montserrat', sans-serif;
-      background-color: var(--light-bg);
       color: var(--text-dark);
-      line-height: 1.6;
-      overflow-x: hidden;
+      overflow: hidden; /* Dùng slider riêng, ẩn thanh cuộn trang */
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite; /* Nền chuyển màu động lung linh */
     }
 
-    /* Fixed Navigation Top Header */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Video background sẵn sàng nếu có file bg-video.mp4 */
+    #bg-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+      filter: brightness(0.6) blur(3px);
+    }
+
+    /* Fixed Navigation Top */
     nav.top-nav {
       position: fixed;
       top: 0;
+      left: 0;
       width: 100%;
-      background-color: rgba(255, 255, 255, 0.95);
+      background-color: rgba(255, 255, 255, 0.85);
       display: flex;
       justify-content: center;
-      gap: 25px;
-      padding: 15px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      gap: 20px;
+      padding: 12px 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       z-index: 1000;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px);
     }
     nav.top-nav a {
       text-decoration: none;
       color: var(--text-dark);
-      font-weight: 600;
-      font-size: 0.95em;
-      transition: all 0.3s ease;
-      position: relative;
+      font-weight: 700;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: color 0.3s;
     }
-    nav.top-nav a:hover { color: var(--primary-green); }
+    nav.top-nav a:hover, nav.top-nav a.active-link {
+      color: var(--primary-green);
+    }
 
-    /* Page Container Section - Đồng bộ kích thước chuẩn Slide */
-    .page-section {
-      max-width: 1050px;
-      min-height: 82vh; /* Fix lỗi 1 & 3: Giúp tất cả các trang luôn bằng kích thước nhau */
-      margin: 75px auto 35px auto;
+    /* SLIDER CONTAINER */
+    .slider-wrapper {
+      display: flex;
+      width: 1000vw; /* 10 Slides */
+      height: 100vh;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* Trượt Smooth */
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px 20px 20px;
+    }
+
+    /* KHUNG THIẾT KẾ SLIDE (Căn chỉnh gọn gàng chuẩn kích thước) */
+    .card-content {
       background: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-      padding: 40px;
-      position: relative;
-      scroll-snap-align: center; /* Hút chuẩn Slide vào giữa màn hình */
+      width: 90%;
+      max-width: 1000px;
+      max-height: 85vh;
+      border-radius: 16px;
+      padding: 35px 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.4s ease, opacity 0.4s ease;
+      overflow-y: auto;
     }
 
-    /* Cover Page 1 & 10 */
-    .cover-page {
+    /* ANIMATION NỘI DUNG HIỆN TỪNG PHẦN (FADE IN UP) */
+    .slide .anim {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: all 0.6s ease;
+    }
+    .slide.active-slide .anim {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .slide.active-slide .anim-d1 { transition-delay: 0.2s; }
+    .slide.active-slide .anim-d2 { transition-delay: 0.4s; }
+    .slide.active-slide .anim-d3 { transition-delay: 0.6s; }
+
+    /* Cover Styling */
+    .cover-card {
       text-align: center;
       justify-content: center;
-      background-color: #f7f6f2;
+      background: #f7f6f2;
     }
-    .cover-subtitle { font-size: 1.1em; letter-spacing: 2px; color: #666; margin-bottom: 10px; text-transform: uppercase; }
+    .cover-subtitle { font-size: 1.1em; letter-spacing: 2px; color: #666; }
     .cover-script {
       font-family: 'Caveat', cursive;
       font-size: 5.5rem;
       color: #222;
       line-height: 0.8;
-      margin-bottom: -35px;
+      margin-bottom: -30px;
       position: relative;
       z-index: 2;
     }
     .cover-main-title {
-      font-size: 5.8rem;
+      font-size: 5.5rem;
       font-weight: 900;
       color: var(--primary-green);
       letter-spacing: 4px;
-      text-transform: uppercase;
     }
-    .cover-name { font-size: 1.6em; font-weight: 600; margin-top: 30px; }
 
-    /* Page Header Bar */
+    /* Layout Elements */
     .section-header {
       display: flex;
       align-items: baseline;
       gap: 15px;
       border-bottom: 2px solid #222;
-      padding-bottom: 10px;
-      margin-bottom: 25px;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
     }
-    .section-num { font-size: 2.8em; font-weight: 800; line-height: 1; }
-    .section-title-group h2 { font-size: 1.6em; text-transform: capitalize; }
-    .section-title-group p { font-size: 0.9em; color: #555; }
-
-    /* Banner / Highlight Box */
+    .section-num { font-size: 2.5em; font-weight: 800; }
     .green-badge {
       background-color: var(--primary-green);
       color: #fff;
-      padding: 8px 16px;
+      padding: 6px 14px;
       display: inline-block;
       font-weight: 700;
-      font-size: 1.05em;
       border-radius: 4px;
       margin-bottom: 15px;
     }
-    
-    /* Fix lỗi 2: Tối ưu khối xanh không bị trống thừa */
-    .green-box {
-      background-color: var(--primary-green);
-      color: #111;
-      padding: 25px 30px;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
-      box-sizing: border-box;
-    }
-    .green-box ul { list-style-position: inside; }
-    .green-box li { margin-bottom: 12px; font-size: 0.98em; }
-
-    /* Grid Layouts - Căn chỉnh độ cao đồng đều */
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 30px;
-      align-items: stretch; /* Fix lỗi 2: Kéo hai bên bằng nhau */
-      flex-grow: 1;
+      gap: 25px;
+      align-items: center; /* Căn giữa chiều cao, không bị thọt/thừa */
     }
-
-    /* Images */
+    .green-box {
+      background-color: var(--primary-green);
+      color: #111;
+      padding: 20px 25px;
+      border-radius: 8px;
+    }
+    .green-box li { margin-bottom: 10px; }
     img {
       width: 100%;
-      height: 100%;
+      height: auto;
+      max-height: 40vh;
+      object-fit: contain;
       border-radius: 6px;
-      object-fit: cover;
-    }
-    .img-frame {
       border: 1px solid #ddd;
-      padding: 5px;
       background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-radius: 6px;
+      padding: 4px;
     }
 
-    /* Footer Bottom Tab Bar */
+    /* Bottom Tab Display */
     .bottom-tabs {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      margin-top: 25px;
       border-top: 2px dashed #ccc;
-      padding-top: 15px;
+      padding-top: 12px;
+      margin-top: 15px;
       text-align: center;
     }
     .bottom-tab {
-      padding: 8px;
+      padding: 6px;
       font-weight: 600;
-      color: #555;
-      font-size: 0.88em;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: all 0.2s ease;
+      color: #666;
+      font-size: 0.85em;
     }
     .bottom-tab.active {
       background-color: var(--primary-green);
       color: #000;
+      border-radius: 4px;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .grid-2col { grid-template-columns: 1fr; }
-      .cover-main-title { font-size: 3rem; }
-      .cover-script { font-size: 3.5rem; }
-      .bottom-tabs { grid-template-columns: 1fr 1fr; gap: 8px; }
-      .page-section { min-height: auto; margin: 60px 15px 20px 15px; padding: 20px; }
+    /* Nút điều hướng Slide Trái/Phải */
+    .nav-btn {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.5em;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      z-index: 1000;
+      transition: all 0.3s;
     }
+    .nav-btn:hover { background: var(--primary-green); color: #fff; }
+    #prevBtn { left: 20px; }
+    #nextBtn { right: 20px; }
+
+    /* Dải chấm tròn vị trí Slide */
+    .dots-container {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .dot.active-dot { background: var(--primary-green); transform: scale(1.3); }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <!-- Khóa chuột phải -->
 
-  <!-- Navigation Bar Top -->
+  <!-- Video Nền Động (Nếu có file mp4 thì mở comment dòng dưới) -->
+  <!-- <video autoplay muted loop id="bg-video"><source src="bg-video.mp4" type="video/mp4"></video> -->
+
+  <!-- Fixed Header -->
   <nav class="top-nav">
-    <a href="#cover">Trang chủ</a>
-    <a href="#about">1. Về bản thân</a>
-    <a href="#education">2. Học vấn</a>
-    <a href="#experience">3. Kinh nghiệm</a>
-    <a href="#contact">4. Liên hệ</a>
+    <a onclick="goToSlide(0)">Trang chủ</a>
+    <a onclick="goToSlide(2)">1. Về bản thân</a>
+    <a onclick="goToSlide(3)">2. Học vấn</a>
+    <a onclick="goToSlide(4)">3. Kinh nghiệm</a>
+    <a onclick="goToSlide(8)">4. Liên hệ</a>
   </nav>
 
-  <!-- PAGE 1: COVER -->
-  <div class="page-section cover-page" id="cover">
-    <div class="cover-subtitle">Portfolio Presentation</div>
-    <div class="cover-script">Creative</div>
-    <div class="cover-main-title">PORTFOLIO</div>
-    <div class="cover-name">Phạm Hồng Loan</div>
-  </div>
+  <!-- Slider Wrapper -->
+  <div class="slider-wrapper" id="sliderWrapper">
 
-  <!-- PAGE 2: MỤC LỤC -->
-  <div class="page-section grid-2col" style="align-items: center;" id="contents">
-    <div style="font-size: 2.5em; font-weight: 800; text-align: center; letter-spacing: 3px;">
-      MỤC LỤC
-    </div>
-    <div style="background-color: var(--primary-green); padding: 40px; border-radius: 8px; font-weight: 700; font-size: 1.25em; display: flex; flex-direction: column; gap: 25px; justify-content: center; height: 80%;">
-      <div>1. VỀ BẢN THÂN</div>
-      <div>2. HỌC VẤN</div>
-      <div>3. KINH NGHIỆM</div>
-      <div>4. THÔNG TIN LIÊN HỆ</div>
-    </div>
-  </div>
-
-  <!-- PAGE 3: VỀ BẢN THÂN -->
-  <div class="page-section" id="about">
-    <div class="section-header">
-      <div class="section-num">1</div>
-      <div class="section-title-group">
-        <h2>Về bản thân</h2>
-        <p>Xin chào, sau đây là một vài nét về bản thân mình.</p>
+    <!-- SLIDE 1: COVER -->
+    <div class="slide active-slide">
+      <div class="card-content cover-card">
+        <div class="cover-subtitle anim anim-d1">Portfolio Presentation</div>
+        <div class="cover-script anim anim-d2">Creative</div>
+        <div class="cover-main-title anim anim-d3">PORTFOLIO</div>
+        <div class="cover-name anim anim-d3">Phạm Hồng Loan</div>
       </div>
     </div>
 
-    <div class="grid-2col">
-      <div class="green-box">
-        <h3 style="margin-bottom: 15px; font-size: 1.35em;">MÌNH LÀ HỒNG LOAN</h3>
-        <p style="margin-bottom: 15px;">Hiện tại, mình đang là sinh viên năm 4 ngành Kinh tế đối ngoại.</p>
-        <p>Dù không xuất phát từ chuyên ngành Marketing, mình yêu thích lĩnh vực này bởi tính sáng tạo, năng động và khả năng thấu hiểu nhu cầu, hành vi con người. Từ đó, mình chủ động học hỏi và trau dồi kiến thức nhằm đáp ứng tốt yêu cầu công việc và định hướng của Quý Công ty.</p>
-      </div>
-      <div>
-        <img src="0.png" alt="Phạm Hồng Loan" class="img-frame">
-      </div>
-    </div>
-
-    <div class="bottom-tabs">
-      <a href="#about" class="bottom-tab active">Về bản thân</a>
-      <a href="#education" class="bottom-tab">Học vấn</a>
-      <a href="#experience" class="bottom-tab">Kinh nghiệm</a>
-      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
-    </div>
-  </div>
-
-  <!-- PAGE 4: HỌC VẤN -->
-  <div class="page-section" id="education">
-    <div class="section-header">
-      <div class="section-num">2</div>
-      <div class="section-title-group">
-        <h2>Học vấn</h2>
-        <p>Đang theo học chương trình đại học</p>
-      </div>
-    </div>
-
-    <div class="grid-2col">
-      <div style="display: flex; flex-direction: column; justify-content: center;">
-        <div class="green-badge" style="width: 100%; text-align: center; padding: 15px 0;">
-          2023 - Nay: Đại học<br>Khối ngành: Kinh tế
-        </div>
-        <ul style="margin-top: 25px; padding-left: 20px; font-size: 1.05em;">
-          <li style="margin-bottom: 15px;"><strong>Trường Đại học Ngoại thương</strong></li>
-          <li><strong>Chuyên ngành:</strong> Kinh tế đối ngoại</li>
-        </ul>
-      </div>
-      <div>
-        <img src="1.png" alt="Trường Đại học Ngoại thương" class="img-frame">
-      </div>
-    </div>
-
-    <div class="bottom-tabs">
-      <a href="#about" class="bottom-tab">Về bản thân</a>
-      <a href="#education" class="bottom-tab active">Học vấn</a>
-      <a href="#experience" class="bottom-tab">Kinh nghiệm</a>
-      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
-    </div>
-  </div>
-
-  <!-- PAGE 5: KINH NGHIỆM - CLB -->
-  <div class="page-section" id="experience">
-    <div>
-      <div class="section-header">
-        <div class="section-num">3</div>
-        <div class="section-title-group">
-          <h2>Kinh nghiệm</h2>
-          <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+    <!-- SLIDE 2: MỤC LỤC -->
+    <div class="slide">
+      <div class="card-content">
+        <div class="grid-2col" style="height: 100%;">
+          <div style="font-size: 2.5em; font-weight: 800; text-align: center;" class="anim anim-d1">MỤC LỤC</div>
+          <div style="background: var(--primary-green); padding: 35px; border-radius: 12px; font-weight: 700; font-size: 1.2em; display: flex; flex-direction: column; gap: 20px;" class="anim anim-d2">
+            <div>1. VỀ BẢN THÂN</div>
+            <div>2. HỌC VẤN</div>
+            <div>3. KINH NGHIỆM</div>
+            <div>4. THÔNG TIN LIÊN HỆ</div>
+          </div>
         </div>
       </div>
-      <div class="green-badge">Tham gia CLB trên trường</div>
     </div>
 
-    <div class="grid-2col">
-      <div class="green-box">
-        <ul>
-          <li>Tham gia CLB từ những năm đầu đại học nhằm học hỏi và tích lũy trải nghiệm thực tế.</li>
-          <li>Đảm nhiệm vai trò Ban Đối ngoại, bước đầu làm quen với các kỹ năng nền tảng của Marketing.</li>
-        </ul>
-      </div>
-      <div style="display: flex; gap: 10px;">
-        <img src="3.png" alt="CLB Group" class="img-frame" style="width: 65%;">
-        <img src="2.png" alt="Hồng Loan CLB" class="img-frame" style="width: 35%;">
-      </div>
-    </div>
-
-    <div class="bottom-tabs">
-      <a href="#about" class="bottom-tab">Về bản thân</a>
-      <a href="#education" class="bottom-tab">Học vấn</a>
-      <a href="#experience" class="bottom-tab active">Kinh nghiệm</a>
-      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
-    </div>
-  </div>
-
-  <!-- PAGE 6: KINH NGHIỆM - BAN TỔ CHỨC CUỘC THI -->
-  <div class="page-section">
-    <div>
-      <div class="section-header">
-        <div class="section-num">3</div>
-        <div class="section-title-group">
-          <h2>Kinh nghiệm</h2>
-          <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+    <!-- SLIDE 3: VỀ BẢN THÂN -->
+    <div class="slide">
+      <div class="card-content">
+        <div class="section-header anim anim-d1">
+          <div class="section-num">1</div>
+          <div><h2>Về bản thân</h2><p>Xin chào, sau đây là một vài nét về bản thân mình.</p></div>
+        </div>
+        <div class="grid-2col">
+          <div class="green-box anim anim-d2">
+            <h3 style="margin-bottom: 10px;">MÌNH LÀ HỒNG LOAN</h3>
+            <p style="margin-bottom: 10px;">Hiện tại, mình đang là sinh viên năm 4 ngành Kinh tế đối ngoại.</p>
+            <p>Dù không xuất phát từ chuyên ngành Marketing, mình yêu thích lĩnh vực này bởi tính sáng tạo, năng động và khả năng thấu hiểu nhu cầu, hành vi con người.</p>
+          </div>
+          <div class="anim anim-d3"><img src="0.png" alt="Hồng Loan"></div>
+        </div>
+        <div class="bottom-tabs">
+          <div class="bottom-tab active">Về bản thân</div><div class="bottom-tab">Học vấn</div><div class="bottom-tab">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
         </div>
       </div>
-      <div class="green-badge">
-        BTC Cuộc thi INTERCHAIN và Viet Nam Young Logistics Talents
-      </div>
     </div>
 
-    <div class="grid-2col">
-      <div class="green-box">
-        <ul>
-          <li>Vai trò Ban Tổ chức hai cuộc thi, làm email marketing cho hoạt động truyền thông và tiếp cận nhà tài trợ.</li>
-          <li>Phối hợp chăm sóc đối tác và hỗ trợ tổ chức, điều phối sự kiện.</li>
-          <li>Hiểu quy trình truyền thông sự kiện và rèn luyện kỹ năng làm việc nhóm.</li>
-        </ul>
-      </div>
-      <div>
-        <img src="4.png" alt="Cuộc thi Interchain" class="img-frame">
-      </div>
-    </div>
-
-    <div class="bottom-tabs">
-      <a href="#about" class="bottom-tab">Về bản thân</a>
-      <a href="#education" class="bottom-tab">Học vấn</a>
-      <a href="#experience" class="bottom-tab active">Kinh nghiệm</a>
-      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
-    </div>
-  </div>
-
-  <!-- PAGE 7: THIẾT KẾ ẤN PHẨM -->
-  <div class="page-section">
-    <div>
-      <div class="section-header">
-        <div class="section-num">3</div>
-        <div class="section-title-group">
-          <h2>Kinh nghiệm</h2>
-          <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+    <!-- SLIDE 4: HỌC VẤN -->
+    <div class="slide">
+      <div class="card-content">
+        <div class="section-header anim anim-d1">
+          <div class="section-num">2</div>
+          <div><h2>Học vấn</h2><p>Đang theo học chương trình đại học</p></div>
+        </div>
+        <div class="grid-2col">
+          <div class="anim anim-d2">
+            <div class="green-badge" style="width:100%; text-align:center;">2023 - Nay: Đại học | Khối ngành: Kinh tế</div>
+            <ul style="padding-left: 20px; margin-top: 15px;">
+              <li><strong>Trường Đại học Ngoại thương</strong></li>
+              <li><strong>Chuyên ngành:</strong> Kinh tế đối ngoại</li>
+            </ul>
+          </div>
+          <div class="anim anim-d3"><img src="1.png" alt="FTU"></div>
+        </div>
+        <div class="bottom-tabs">
+          <div class="bottom-tab">Về bản thân</div><div class="bottom-tab active">Học vấn</div><div class="bottom-tab">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
         </div>
       </div>
-      <div class="green-badge">Thiết kế ấn phẩm cho sự kiện</div>
     </div>
 
-    <div class="grid-2col">
-      <div class="green-box">
-        <ul>
-          <li>Thiết kế bookmark cho workshop offline mừng Quốc khánh bằng Canva.</li>
-          <li>Sản phẩm nhận phản hồi tích cực, có khách mong muốn mua trọn bộ dù được phát miễn phí.</li>
-        </ul>
-      </div>
-      <div>
-        <img src="5.png" alt="Bộ Bookmark" class="img-frame">
-      </div>
-    </div>
-
-    <div class="bottom-tabs">
-      <a href="#about" class="bottom-tab">Về bản thân</a>
-      <a href="#education" class="bottom-tab">Học vấn</a>
-      <a href="#experience" class="bottom-tab active">Kinh nghiệm</a>
-      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
-    </div>
-  </div>
-
-  <!-- PAGE 8: INTERN MARKETING SEO -->
-  <div class="page-section">
-    <div>
-      <div class="section-header">
-        <div class="section-num">3</div>
-        <div class="section-title-group">
-          <h2>Kinh nghiệm</h2>
-          <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+    <!-- SLIDE 5: CLB -->
+    <div class="slide">
+      <div class="card-content">
+        <div class="section-header anim anim-d1">
+          <div class="section-num">3</div><div><h2>Kinh nghiệm</h2><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+        </div>
+        <div class="green-badge anim anim-d2">Tham gia CLB trên trường</div>
+        <div class="grid-2col">
+          <div class="green-box anim anim-d2">
+            <ul>
+              <li>Tham gia CLB từ những năm đầu đại học nhằm học hỏi kinh nghiệm.</li>
+              <li>Đảm nhiệm vai trò Ban Đối ngoại, bước đầu làm quen với Marketing.</li>
+            </ul>
+          </div>
+          <div style="display:flex; gap:10px;" class="anim anim-d3">
+            <img src="3.png" style="width:60%;"><img src="2.png" style="width:40%;">
+          </div>
+        </div>
+        <div class="bottom-tabs">
+          <div class="bottom-tab">Về bản thân</div><div class="bottom-tab">Học vấn</div><div class="bottom-tab active">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
         </div>
       </div>
-      <div class="green-badge">
-        Intern Marketing SEO tại BMIN - Content SEO và tối ưu hóa
+    </div>
+
+    <!-- SLIDE 6: INTERCHAIN -->
+    <div class="slide">
+      <div class="card-content">
+        <div class="section-header anim anim-d1">
+          <div class="section-num">3</div><div><h2>Kinh nghiệm</h2><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+        </div>
+        <div class="green-badge anim anim-d2">BTC Cuộc thi INTERCHAIN và Viet Nam Young Logistics Talents</div>
+        <div class="grid-2col">
+          <div class="green-box anim anim-d2">
+            <ul>
+              <li>Làm email marketing truyền thông và tiếp cận nhà tài trợ.</li>
+              <li>Phối hợp chăm sóc đối tác, điều phối sự kiện.</li>
+            </ul>
+          </div>
+          <div class="anim anim-d3"><img src="4.png"></div>
+        </div>
+        <div class="bottom-tabs">
+          <div class="bottom-tab">Về bản thân</div><div class="bottom-tab">Học vấn</div><div class="bottom-tab active">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
+        </div>
       </div>
     </div>
 
-    <div class="grid-2col">
-      <div class="green-box">
-        <ul>
-          <li>Viết và tối ưu nội dung chuẩn SEO cho website của các thương hiệu: T Space, Rèm Thanh Phượng, Tàu cao tốc Hoàng Quân,...</li>
-          <li>Nghiên cứu từ khóa và xây dựng outline trước khi triển khai bài viết.</li>
-          <li>Chỉnh sửa hình ảnh bằng Canva để sử dụng trong các bài đăng trên website.</li>
-        </ul>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <img src="6.png" alt="Dự án SEO BMIN" class="img-frame" style="height: 50%;">
-        <img src="7.png" alt="TSpace Website" class="img-frame" style="height: 50%;">
+    <!-- SLIDE 7: BOOKMARK -->
+    <div class="slide">
+      <div class="card-content">
+        <div class="section-header anim anim-d1">
+          <div class="section-num">3</div><div><h2>Kinh nghiệm</h2><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+        </div>
+        <div class="green-badge anim anim-d2">Thiết kế ấn phẩm cho sự kiện</div>
+        <div class="grid-2col">
+          <div class="green-box anim anim-d2">
+            <ul>
+              <li>Thiết kế bookmark mừng Quốc khánh bằng Canva.</li>
+              <li>Sản phẩm nhận phản hồi cực kỳ tích cực từ khách hàng.</li>
+            </ul>
+          </div>
+          <div class="anim anim-d3"><img src="5.png"></div>
+        </div>
+        <div class="bottom-tabs">
+          <div class="bottom-tab">Về bản thân</div><div class="bottom-tab">Học vấn</div><div class="bottom-tab active">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
+        </div>
       </div>
     </div>
 
-    <div class="bottom-tabs">
-      <a href="#about" class="bottom-tab">Về bản thân</a>
-      <a href="#education" class="bottom-tab">Học vấn</a>
-      <a href="#experience" class="bottom-tab active">Kinh nghiệm</a>
-      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
+    <!-- SLIDE 8: SEO BMIN -->
+    <div class="slide">
+      <div class="card-content">
+        <div class="section-header anim anim-d1">
+          <div class="section-num">3</div><div><h2>Kinh nghiệm</h2><p>Hành trình bắt đầu và học hỏi Marketing & Content</p></div>
+        </div>
+        <div class="green-badge anim anim-d2">Intern Marketing SEO tại BMIN</div>
+        <div class="grid-2col">
+          <div class="green-box anim anim-d2">
+            <ul>
+              <li>Viết và tối ưu nội dung chuẩn SEO cho các thương hiệu T Space, Rèm Thanh Phượng,...</li>
+              <li>Nghiên cứu từ khóa và thiết kế hình ảnh bài đăng.</li>
+            </ul>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;" class="anim anim-d3">
+            <img src="6.png" style="max-height:20vh;"><img src="7.png" style="max-height:20vh;">
+          </div>
+        </div>
+        <div class="bottom-tabs">
+          <div class="bottom-tab">Về bản thân</div><div class="bottom-tab">Học vấn</div><div class="bottom-tab active">Kinh nghiệm</div><div class="bottom-tab">Thông tin liên hệ</div>
+        </div>
+      </div>
     </div>
+
+    <!-- SLIDE 9: LIÊN HỆ -->
+    <div class="slide">
+      <div class="card-content">
+        <div class="section-header anim anim-d1">
+          <div class="section-num">4</div><div><h2>Thông tin liên hệ</h2><p>Rất mong có cơ hội kết nối từ Quý Công ty!</p></div>
+        </div>
+        <div class="grid-2col">
+          <div class="anim anim-d2" style="text-align:center;"><img src="8.png" style="max-width:280px;"></div>
+          <div class="anim anim-d3" style="font-size:1.2em; display:flex; flex-direction:column; gap:20px;">
+            <div>📞 <strong>Điện thoại:</strong> 0326169868</div>
+            <div>✉️ <strong>Email:</strong> loanhongpham6a1@gmail.com</div>
+          </div>
+        </div>
+        <div class="bottom-tabs">
+          <div class="bottom-tab">Về bản thân</div><div class="bottom-tab">Học vấn</div><div class="bottom-tab">Kinh nghiệm</div><div class="bottom-tab active">Thông tin liên hệ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: THANKS -->
+    <div class="slide">
+      <div class="card-content cover-card">
+        <div class="cover-subtitle anim anim-d1">Portfolio Presentation</div>
+        <div class="cover-script anim anim-d2">Thanks for</div>
+        <div class="cover-main-title anim anim-d3">WATCHING</div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- PAGE 9: THÔNG TIN LIÊN HỆ -->
-  <div class="page-section" id="contact">
-    <div class="section-header">
-      <div class="section-num">4</div>
-      <div class="section-title-group">
-        <h2>Thông tin liên hệ</h2>
-        <p>Rất mong có cơ hội được kết nối và học hỏi từ Quý Công ty!</p>
-      </div>
-    </div>
+  <!-- Nút bấm chuyển Slide Trái / Phải -->
+  <button class="nav-btn" id="prevBtn" onclick="prevSlide()">❮</button>
+  <button class="nav-btn" id="nextBtn" onclick="nextSlide()">❯</button>
 
-    <div class="grid-2col" style="align-items: center;">
-      <div style="text-align: center;">
-        <img src="8.png" alt="Phạm Hồng Loan Contact" class="img-frame" style="max-width: 320px; height: auto;">
-      </div>
-      <div style="font-size: 1.25em; display: flex; flex-direction: column; gap: 25px; justify-content: center;">
-        <div><strong>📞 Điện thoại:</strong> 0326169868</div>
-        <div><strong>✉️ Email:</strong> loanhongpham6a1@gmail.com</div>
-      </div>
-    </div>
+  <!-- Dải chấm tròn vị trí -->
+  <div class="dots-container" id="dotsContainer"></div>
 
-    <div class="bottom-tabs">
-      <a href="#about" class="bottom-tab">Về bản thân</a>
-      <a href="#education" class="bottom-tab">Học vấn</a>
-      <a href="#experience" class="bottom-tab">Kinh nghiệm</a>
-      <a href="#contact" class="bottom-tab active">Thông tin liên hệ</a>
-    </div>
-  </div>
+  <!-- JAVASCRIPT ĐIỀU KHIỂN SLIDER -->
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 10;
+    const sliderWrapper = document.getElementById('sliderWrapper');
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('dotsContainer');
 
-  <!-- PAGE 10: THANKS FOR WATCHING -->
-  <div class="page-section cover-page">
-    <div class="cover-subtitle">Portfolio Presentation</div>
-    <div class="cover-script">Thanks for</div>
-    <div class="cover-main-title">WATCHING</div>
-  </div>
+    // Khởi tạo chấm tròn
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      if (i === 0) dot.classList.add('active-dot');
+      dot.addEventListener('click', () => goToSlide(i));
+      dotsContainer.appendChild(dot);
+    }
 
+    function updateSlider() {
+      sliderWrapper.style.transform = `translateX(-${currentSlide * 100}vw)`;
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active-slide');
+        } else {
+          slide.classList.remove('active-slide');
+        }
+      });
+      document.querySelectorAll('.dot').forEach((dot, index) => {
+        dot.classList.toggle('active-dot', index === currentSlide);
+      });
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlider();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) currentSlide++;
+      else currentSlide = 0;
+      updateSlider();
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) currentSlide--;
+      else currentSlide = totalSlides - 1;
+      updateSlider();
+    }
+
+    // Chuyển slide bằng phím mũi tên bàn phím
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    // Chống copy bằng phím tắt Ctrl+C, Ctrl+U, F12
+    document.onkeydown = function(e) {
+      if (e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 67 || e.keyCode == 83))) {
+        return false;
+      }
+    };
+  </script>
 </body>
 </html>
