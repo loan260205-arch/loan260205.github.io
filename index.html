@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio | Phạm Hồng Loan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-green: #7bc4b2;
+      --light-bg: #f4f3ef;
+      --text-dark: #222222;
+      --card-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    /* Fixed Navigation Top Header */
+    nav.top-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.95);
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 12px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      z-index: 1000;
+    }
+    nav.top-nav a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: color 0.3s;
+    }
+    nav.top-nav a:hover { color: var(--primary-green); }
+
+    /* Page Container Section */
+    .page-section {
+      max-width: 1000px;
+      margin: 80px auto 40px auto;
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      padding: 40px;
+      position: relative;
+    }
+
+    /* Cover Page 1 & 10 */
+    .cover-page {
+      text-align: center;
+      padding: 100px 20px;
+      background-color: #f7f6f2;
+    }
+    .cover-subtitle { font-size: 1em; letter-spacing: 1px; color: #666; margin-bottom: 10px; }
+    .cover-script {
+      font-family: 'Caveat', cursive;
+      font-size: 5rem;
+      color: #222;
+      line-height: 0.8;
+      margin-bottom: -35px;
+      position: relative;
+      z-index: 2;
+    }
+    .cover-main-title {
+      font-size: 5.5rem;
+      font-weight: 900;
+      color: var(--primary-green);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    .cover-name { font-size: 1.5em; font-weight: 600; margin-top: 30px; }
+
+    /* Page Header Bar */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 15px;
+      border-bottom: 2px solid #222;
+      padding-bottom: 10px;
+      margin-bottom: 30px;
+    }
+    .section-num { font-size: 2.8em; font-weight: 800; line-height: 1; }
+    .section-title-group h2 { font-size: 1.6em; text-transform: capitalize; }
+    .section-title-group p { font-size: 0.9em; color: #555; }
+
+    /* Banner / Highlight Box */
+    .green-badge {
+      background-color: var(--primary-green);
+      color: #fff;
+      padding: 8px 16px;
+      display: inline-block;
+      font-weight: 700;
+      font-size: 1.1em;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+    .green-box {
+      background-color: var(--primary-green);
+      color: #111;
+      padding: 25px;
+      border-radius: 6px;
+      height: 100%;
+    }
+    .green-box ul { list-style-position: inside; }
+    .green-box li { margin-bottom: 12px; }
+
+    /* Grid Layouts */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    /* Images */
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+    .img-frame {
+      border: 1px solid #ddd;
+      padding: 5px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* Footer Bottom Tab Bar (Matching Canva Design) */
+    .bottom-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: 40px;
+      border-top: 2px dashed #ccc;
+      padding-top: 15px;
+      text-align: center;
+    }
+    .bottom-tab {
+      padding: 10px;
+      font-weight: 600;
+      color: #555;
+      font-size: 0.9em;
+      text-decoration: none;
+    }
+    .bottom-tab.active {
+      background-color: var(--primary-green);
+      color: #000;
+      border-radius: 4px;
+    }
+
+    /* Responsive for mobile */
+    @media (max-width: 768px) {
+      .grid-2col { grid-template-columns: 1fr; }
+      .cover-main-title { font-size: 3rem; }
+      .cover-script { font-size: 3.5rem; }
+      .bottom-tabs { grid-template-columns: 1fr 1fr; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar Top -->
+  <nav class="top-nav">
+    <a href="#about">1. Về bản thân</a>
+    <a href="#education">2. Học vấn</a>
+    <a href="#experience">3. Kinh nghiệm</a>
+    <a href="#contact">4. Liên hệ</a>
+  </nav>
+
+  <!-- PAGE 1: COVER -->
+  <div class="page-section cover-page">
+    <div class="cover-subtitle">Portfolio Presentation</div>
+    <div class="cover-script">Creative</div>
+    <div class="cover-main-title">PORTFOLIO</div>
+    <div class="cover-name">Phạm Hồng Loan</div>
+  </div>
+
+  <!-- PAGE 2: MỤC LỤC -->
+  <div class="page-section grid-2col" style="padding: 60px 40px;">
+    <div style="font-size: 2.2em; font-weight: 700; text-align: center; letter-spacing: 2px;">
+      MỤC LỤC
+    </div>
+    <div style="background-color: var(--primary-green); padding: 40px; border-radius: 6px; font-weight: 700; font-size: 1.2em; display: flex; flex-direction: column; gap: 20px;">
+      <div>1. VỀ BẢN THÂN</div>
+      <div>2. HỌC VẤN</div>
+      <div>3. KINH NGHIỆM</div>
+      <div>4. THÔNG TIN LIÊN HỆ</div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: VỀ BẢN THÂN -->
+  <div class="page-section" id="about">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title-group">
+        <h2>Về bản thân</h2>
+        <p>Xin chào, sau đây là một vài nét về bản thân mình.</p>
+      </div>
+    </div>
+
+    <div class="grid-2col">
+      <div class="green-box">
+        <h3 style="margin-bottom: 15px; font-size: 1.3em;">MÌNH LÀ HỒNG LOAN</h3>
+        <p style="margin-bottom: 15px;">Hiện tại, mình đang là sinh viên năm 4 ngành Kinh tế đối ngoại.</p>
+        <p>Dù không xuất phát từ chuyên ngành Marketing, mình yêu thích lĩnh vực này bởi tính sáng tạo, năng động và khả năng thấu hiểu nhu cầu, hành vi con người. Từ đó, mình chủ động học hỏi và trau dồi kiến thức nhằm đáp ứng tốt yêu cầu công việc và định hướng của Quý Công ty.</p>
+      </div>
+      <div>
+        <img src="avatar-about.jpg" alt="Phạm Hồng Loan" class="img-frame">
+      </div>
+    </div>
+
+    <!-- Bottom Tab Navigation -->
+    <div class="bottom-tabs">
+      <a href="#about" class="bottom-tab active">Về bản thân</a>
+      <a href="#education" class="bottom-tab">Học vấn</a>
+      <a href="#experience" class="bottom-tab">Kinh nghiệm</a>
+      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
+    </div>
+  </div>
+
+  <!-- PAGE 4: HỌC VẤN -->
+  <div class="page-section" id="education">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title-group">
+        <h2>Học vấn</h2>
+        <p>Đang theo học chương trình đại học</p>
+      </div>
+    </div>
+
+    <div class="grid-2col">
+      <div>
+        <div class="green-badge" style="width: 100%;">
+          2023 - Nay: Đại học<br>Khối ngành: Kinh tế
+        </div>
+        <ul style="margin-top: 20px; padding-left: 20px;">
+          <li style="margin-bottom: 10px;"><strong>Trường Đại học Ngoại thương</strong></li>
+          <li><strong>Chuyên ngành:</strong> Kinh tế đối ngoại</li>
+        </ul>
+      </div>
+      <div>
+        <img src="ftu-school.jpg" alt="Trường Đại học Ngoại thương" class="img-frame">
+      </div>
+    </div>
+
+    <div class="bottom-tabs">
+      <a href="#about" class="bottom-tab">Về bản thân</a>
+      <a href="#education" class="bottom-tab active">Học vấn</a>
+      <a href="#experience" class="bottom-tab">Kinh nghiệm</a>
+      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
+    </div>
+  </div>
+
+  <!-- PAGE 5: KINH NGHIỆM - CLB -->
+  <div class="page-section" id="experience">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title-group">
+        <h2>Kinh nghiệm</h2>
+        <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+      </div>
+    </div>
+
+    <div class="green-badge">Tham gia CLB trên trường</div>
+
+    <div class="grid-2col" style="margin-top: 15px;">
+      <div class="green-box">
+        <ul>
+          <li>Tham gia CLB từ những năm đầu đại học nhằm học hỏi và tích lũy trải nghiệm thực tế.</li>
+          <li>Đảm nhiệm vai trò Ban Đối ngoại, bước đầu làm quen với các kỹ năng nền tảng của Marketing.</li>
+        </ul>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <img src="clb-group.jpg" alt="CLB Group" class="img-frame" style="width: 65%;">
+        <img src="clb-avatar.jpg" alt="Hồng Loan CLB" class="img-frame" style="width: 35%;">
+      </div>
+    </div>
+
+    <div class="bottom-tabs">
+      <a href="#about" class="bottom-tab">Về bản thân</a>
+      <a href="#education" class="bottom-tab">Học vấn</a>
+      <a href="#experience" class="bottom-tab active">Kinh nghiệm</a>
+      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
+    </div>
+  </div>
+
+  <!-- PAGE 6: KINH NGHIỆM - BAN TỔ CHỨC CUỘC THI -->
+  <div class="page-section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title-group">
+        <h2>Kinh nghiệm</h2>
+        <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+      </div>
+    </div>
+
+    <div class="green-badge">
+      BTC Cuộc thi INTERCHAIN và Viet Nam Young Logistics Talents
+    </div>
+
+    <div class="grid-2col" style="margin-top: 15px;">
+      <div class="green-box">
+        <ul>
+          <li>Vai trò Ban Tổ chức hai cuộc thi, làm email marketing cho hoạt động truyền thông và tiếp cận nhà tài trợ.</li>
+          <li>Phối hợp chăm sóc đối tác và hỗ trợ tổ chức, điều phối sự kiện.</li>
+          <li>Hiểu quy trình truyền thông sự kiện và rèn luyện kỹ năng làm việc nhóm.</li>
+        </ul>
+      </div>
+      <div>
+        <img src="interchain-group.jpg" alt="Cuộc thi Interchain" class="img-frame" style="margin-bottom: 10px;">
+        <div style="display: flex; gap: 10px;">
+          <img src="interchain-sub1.jpg" alt="Sự kiện" class="img-frame" style="width: 50%;">
+          <img src="interchain-sub2.jpg" alt="Sự kiện" class="img-frame" style="width: 50%;">
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-tabs">
+      <a href="#about" class="bottom-tab">Về bản thân</a>
+      <a href="#education" class="bottom-tab">Học vấn</a>
+      <a href="#experience" class="bottom-tab active">Kinh nghiệm</a>
+      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
+    </div>
+  </div>
+
+  <!-- PAGE 7: THIẾT KẾ Ấn PHẨM -->
+  <div class="page-section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title-group">
+        <h2>Kinh nghiệm</h2>
+        <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+      </div>
+    </div>
+
+    <div class="green-badge">Thiết kế ấn phẩm cho sự kiện</div>
+
+    <div class="grid-2col" style="margin-top: 15px;">
+      <div class="green-box">
+        <ul>
+          <li>Thiết kế bookmark cho workshop offline mừng Quốc khánh bằng Canva.</li>
+          <li>Sản phẩm nhận phản hồi tích cực, có khách mong muốn mua trọn bộ dù được phát miễn phí.</li>
+        </ul>
+      </div>
+      <div>
+        <img src="bookmark-hand.jpg" alt="Bookmark" class="img-frame" style="margin-bottom: 10px;">
+        <div style="display: flex; gap: 10px;">
+          <img src="bookmark-flat.jpg" alt="Bộ Bookmark" class="img-frame" style="width: 50%;">
+          <img src="bookmark-banner.jpg" alt="Banner Bookmark" class="img-frame" style="width: 50%;">
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-tabs">
+      <a href="#about" class="bottom-tab">Về bản thân</a>
+      <a href="#education" class="bottom-tab">Học vấn</a>
+      <a href="#experience" class="bottom-tab active">Kinh nghiệm</a>
+      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
+    </div>
+  </div>
+
+  <!-- PAGE 8: INTERN MARKETING SEO -->
+  <div class="page-section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title-group">
+        <h2>Kinh nghiệm</h2>
+        <p>Hành trình bắt đầu và học hỏi Marketing & Content</p>
+      </div>
+    </div>
+
+    <div class="green-badge">
+      Intern Marketing SEO tại BMIN - Content SEO và tối ưu hóa
+    </div>
+
+    <div class="grid-2col" style="margin-top: 15px;">
+      <div class="green-box">
+        <ul>
+          <li>Viết và tối ưu nội dung chuẩn SEO cho website của các thương hiệu: T Space, Rèm Thanh Phượng, Tàu cao tốc Hoàng Quân,...</li>
+          <li>Nghiên cứu từ khóa và xây dựng outline trước khi triển khai bài viết.</li>
+          <li>Chỉnh sửa hình ảnh bằng Canva để sử dụng trong các bài đăng trên website.</li>
+        </ul>
+      </div>
+      <div>
+        <img src="seo-bmin.jpg" alt="Dự án SEO BMIN" class="img-frame">
+      </div>
+    </div>
+
+    <div class="bottom-tabs">
+      <a href="#about" class="bottom-tab">Về bản thân</a>
+      <a href="#education" class="bottom-tab">Học vấn</a>
+      <a href="#experience" class="bottom-tab active">Kinh nghiệm</a>
+      <a href="#contact" class="bottom-tab">Thông tin liên hệ</a>
+    </div>
+  </div>
+
+  <!-- PAGE 9: THÔNG TIN LIÊN HỆ -->
+  <div class="page-section" id="contact">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title-group">
+        <h2>Thông tin liên hệ</h2>
+        <p>Rất mong có cơ hội được kết nối và học hỏi từ Quý Công ty!</p>
+      </div>
+    </div>
+
+    <div class="grid-2col" style="align-items: center; padding: 20px 0;">
+      <div>
+        <img src="contact-avatar.jpg" alt="Phạm Hồng Loan Contact" class="img-frame" style="max-width: 350px;">
+      </div>
+      <div style="font-size: 1.2em; display: flex; flex-direction: column; gap: 20px;">
+        <div><strong>📞 Điện thoại:</strong> 0326169868</div>
+        <div><strong>✉️ Email:</strong> loanhongpham6a1@gmail.com</div>
+      </div>
+    </div>
+
+    <div class="bottom-tabs">
+      <a href="#about" class="bottom-tab">Về bản thân</a>
+      <a href="#education" class="bottom-tab">Học vấn</a>
+      <a href="#experience" class="bottom-tab">Kinh nghiệm</a>
+      <a href="#contact" class="bottom-tab active">Thông tin liên hệ</a>
+    </div>
+  </div>
+
+  <!-- PAGE 10: THANKS FOR WATCHING -->
+  <div class="page-section cover-page">
+    <div class="cover-subtitle">Portfolio Presentation</div>
+    <div class="cover-script">Thanks for</div>
+    <div class="cover-main-title">WATCHING</div>
+  </div>
+
+</body>
+</html>
